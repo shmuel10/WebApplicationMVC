@@ -100,45 +100,15 @@ router.post('/newuser', async function (req, res, next) {
 });
 
 router.post('/updateuser', async function (req, res, next) {
-  let updatedUser = req.body;
-  if (updatedUser.hasOwnProperty("password")) {
-    User.update({ "email": req.body.email, "flag": true }, {
-      $set: {
-        "password": updatedUser.password, "name": updatedUser.name,
-        "phone": updatedUser.phone, "type": updatedUser.type, "city": updatedUser.city, updated_at: new Date()
-
-      }
-    }, function () {
-      setTimeout(function () {
-        res.status(200).send();
-      }, 100)
-    });
-  } else {
-    User.update({ "email": req.body.email }, {
-      $set: {
-        "name": updatedUser.name,
-        "phone": updatedUser.phone, "city": updatedUser.city, updated_at: new Date()
-
-      }
-    }, function () {
-      setTimeout(function () {
-        res.status(200).send();
-      }, 100)
-    });
-  }
+  console.log('updateuser', req.body);
+  try {
+    let updatedUser = req.body;
+    await User.UPDATE(updatedUser);
+  } catch (err) { throw err; }
 });
 
 router.post('/deleteuser', async function (req, res, next) {
-  User.update({ "email": req.body.email, "flag": true }, {
-    $set: {
-      "flag": false,
-      updated_at: new Date()
-    }
-  }, function () {
-    setTimeout(function () {
-      res.status(200).send();
-    }, 100)
-  });
+  await User.DELETE(req.body);
 });
 
 router.post('/newstore', async function (req, res, next) {

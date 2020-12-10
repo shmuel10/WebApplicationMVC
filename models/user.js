@@ -36,6 +36,46 @@ module.exports = db => {
         });
     };
 
+    schema.statics.UPDATE = async function (user) {
+        console.log("user to update", user);
+        if (user.hasOwnProperty("password")) {
+            return this.updateOne({ "email": user.email, "flag": true }, {
+                $set: {
+                    "password": user.password, "name": user.name,
+                    "phone": user.phone, "type": user.type, "city": user.city, updated_at: new Date()
+                }, function() {
+                    setTimeout(function () {
+                        res.status(200).send();
+                    }, 100)
+                }
+            });
+        } else {
+            return this.updateOne({ "email": user.email, "flag": true }, {
+                $set: {
+                    "name": user.name,
+                    "phone": user.phone, "city": user.city, updated_at: new Date()
+                }, function() {
+                    setTimeout(function () {
+                        res.status(200).send();
+                    }, 100)
+                }
+            });
+        }
+    }
+
+    schema.statics.DELETE = async function (user) {
+        console.log("user to delete", user);
+        return this.updateOne({ "email": user.email, "flag": true }, {
+            $set: {
+                "flag": false, updated_at: new Date()
+            }, function() {
+                setTimeout(function () {
+                    res.status(200).send();
+                }, 100)
+            }
+        });
+    }
+
     // on every save, add the date
     schema.pre('save', function (next) {
         // get the current date
