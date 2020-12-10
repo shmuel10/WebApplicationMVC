@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../models')("User");
+const Flower = require('../models')("Flower");
+const Store = require('../models')("Store");
 
 router.get('/', async function (req, res, next) {
   let usersArr = await User.REQUEST();
+  usersArr = usersArr.filter(user => user['flag']);
   let params = new URLSearchParams(req.query);
   let user = usersArr.find(existUser => existUser.email === params.get("user"));
   console.log("server user: ", user);
@@ -13,16 +16,16 @@ router.get('/', async function (req, res, next) {
   }, 100);
 });
 
-router.get('/flowers', function (req, res, next) {
-  let flowers = require("../models/data/flowers.json");
-  console.log(flowers);
+router.get('/flowers', async function (req, res, next) {
+  let flowersArr = await Flower.REQUEST();
+  console.log(flowersArr);
   setTimeout(function () {
-    res.render('partials/flowersTemp', { "flowersCatalog": flowers });
+    res.render('partials/flowersTemp', { "flowersCatalog": flowersArr });
   }, 100)
 });
 
-router.get('/stores', function (req, res, next) {
-  let stores = require("../models/data/stores.json");
+router.get('/stores', async function (req, res, next) {
+  let stores = await Store.REQUEST();
   console.log(stores);
   setTimeout(function () {
     res.render('partials/storesTemp', { "stores": stores });
@@ -46,6 +49,7 @@ router.get('/users', async function (req, res, next) {
   console.log("user arr", usersArr);
   usersArr = usersArr.filter(user => user['flag']);
   let params = new URLSearchParams(req.query);
+  console.log("params user", params.get("user"));
   let user = usersArr.find(existUser => existUser.email === params.get("user"));
   console.log("u", user);
   let userType = user['type'];
@@ -63,6 +67,7 @@ router.get('/users', async function (req, res, next) {
 
 router.post('/login', async function (req, res, next) {
   let usersArr = await User.REQUEST();
+  usersArr = usersArr.filter(user => user['flag']);
   let existUser = usersArr.find(existUser => existUser.email === req.body.email);
   if (existUser) {
     if (existUser.password === req.body.password) {
@@ -97,10 +102,11 @@ router.post('/newuser', async function (req, res, next) {
 router.post('/updateuser', async function (req, res, next) {
   let updatedUser = req.body;
   if (updatedUser.hasOwnProperty("password")) {
-    User.update({ "email": req.body.email }, {
+    User.update({ "email": req.body.email, "flag": true }, {
       $set: {
         "password": updatedUser.password, "name": updatedUser.name,
-        "phone": updatedUser.phone, "type": updatedUser.type, "city": updatedUser.city
+        "phone": updatedUser.phone, "type": updatedUser.type, "city": updatedUser.city, updated_at: new Date()
+
       }
     }, function () {
       setTimeout(function () {
@@ -111,7 +117,8 @@ router.post('/updateuser', async function (req, res, next) {
     User.update({ "email": req.body.email }, {
       $set: {
         "name": updatedUser.name,
-        "phone": updatedUser.phone, "city": updatedUser.city
+        "phone": updatedUser.phone, "city": updatedUser.city, updated_at: new Date()
+
       }
     }, function () {
       setTimeout(function () {
@@ -122,9 +129,10 @@ router.post('/updateuser', async function (req, res, next) {
 });
 
 router.post('/deleteuser', async function (req, res, next) {
-  User.update({ "email": req.body.email }, {
+  User.update({ "email": req.body.email, "flag": true }, {
     $set: {
-      "flag": false
+      "flag": false,
+      updated_at: new Date()
     }
   }, function () {
     setTimeout(function () {
@@ -133,20 +141,12 @@ router.post('/deleteuser', async function (req, res, next) {
   });
 });
 
-router.post('/newstore', function (req, res, next) {
-  console.log('newstore', req.body);
-  let stores = require('../models/data/stores.json');
-  if (!storesArr.find(existStore => existStore.name === req.body.name)) {
-    stores.push(req.body)
-    fs.writeFile('../models/data/stores.json', JSON.stringify(stores), function () {
-      setTimeout(function () {
-        res.status(200).send();
-      }, 1000)
-    });
-  } else {
-    setTimeout(function () {
-      res.status(401).send();
-    }, 100)
-  }
+router.post('/newstore', async function (req, res, next) {
+  try {
+    let store = Object.values(req.body);
+    console.log("store: ", store);
+    await Store.CREATE(store);
+    console.log('Store created:' + store);
+  } catch (err) { throw err; }
 });
 module.exports = router;
