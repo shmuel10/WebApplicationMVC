@@ -43,11 +43,11 @@ router.get('/about', function (req, res, next) {
 
 router.get('/users', async function (req, res, next) {
   let usersArr = await User.REQUEST();
-  console.log("user arr" , usersArr);
+  console.log("user arr", usersArr);
   usersArr = usersArr.filter(user => user['flag']);
   let params = new URLSearchParams(req.query);
   let user = usersArr.find(existUser => existUser.email === params.get("user"));
-  console.log("u" , user);
+  console.log("u", user);
   let userType = user['type'];
   if (userType === "Officer") {
     usersArr = usersArr.filter(user => user["type"] === "Client");
@@ -56,14 +56,13 @@ router.get('/users', async function (req, res, next) {
   setTimeout(function () {
     res.render('partials/usersTemp', { "users": usersArr, "userType": userType });
   }, 100)
- // let username = usersArr[0]['password'];
+  // let username = usersArr[0]['password'];
   //console.log("the pass ", username);
   //TODO usersArr = usersArr.filter(user => user["flag"]); 
 });
 
-router.post('/login', function (req, res, next) {
-  delete require.cache[require.resolve('../models/data/users.json')];
-  let usersArr = require("../models/data/users.json");
+router.post('/login', async function (req, res, next) {
+  let usersArr = await User.REQUEST();
   let existUser = usersArr.find(existUser => existUser.email === req.body.email);
   if (existUser) {
     if (existUser.password === req.body.password) {
@@ -95,46 +94,42 @@ router.post('/newuser', async function (req, res, next) {
   } catch (err) { throw err; }
 });
 
-router.post('/updateuser', function (req, res, next) {
-  console.log('updateuser ', req.body);
-  delete require.cache[require.resolve('../models/data/users.json')];
-  let usersArr = require("../models/data/users.json");
-  let users = require('../models/data/users.json');
-  let userToUpdate = usersArr.find(existUser => existUser.email === req.body.email);
+router.post('/updateuser', async function (req, res, next) {
   let updatedUser = req.body;
-  users = users.filter(user => user["email"] != req.body.email);
-  console.log("userto: ", userToUpdate);
-  console.log("userup: ", updatedUser);
-  if (!(updatedUser.hasOwnProperty("password"))) {
-    updatedUser["password"] = userToUpdate.password;
-    updatedUser["type"] = userToUpdate.type;
+  if (updatedUser.hasOwnProperty("password")) {
+    User.update({ "email": req.body.email }, {
+      $set: {
+        "password": updatedUser.password, "name": updatedUser.name,
+        "phone": updatedUser.phone, "type": updatedUser.type, "city": updatedUser.city
+      }
+    }, function () {
+      setTimeout(function () {
+        res.status(200).send();
+      }, 100)
+    });
+  } else {
+    User.update({ "email": req.body.email }, {
+      $set: {
+        "name": updatedUser.name,
+        "phone": updatedUser.phone, "city": updatedUser.city
+      }
+    }, function () {
+      setTimeout(function () {
+        res.status(200).send();
+      }, 100)
+    });
   }
-  users.push(updatedUser)
-  fs.writeFile('../models/data/users.json', JSON.stringify(users), function () {
-    setTimeout(function () {
-      res.status(200).send();
-    }, 100)
-    delete require.cache[require.resolve('../models/data/users.json')];
-    let usersArr = require("../models/data/users.json");
-  });
 });
 
-router.post('/deleteuser', function (req, res, next) {
-  console.log('deleteuser ', req.body);
-  delete require.cache[require.resolve('../models/data/users.json')];
-  let usersArr = require("../models/data/users.json");
-  let users = require('../models/data/users.json');
-  let userToDelete = usersArr.find(existUser => existUser.email === req.body.email);
-  users = users.filter(user => user["email"] != req.body.email);
-  console.log("userto: ", userToDelete);
-  userToDelete["flag"] = false;
-  users.push(userToDelete)
-  fs.writeFile('../models/data/users.json', JSON.stringify(users), function () {
+router.post('/deleteuser', async function (req, res, next) {
+  User.update({ "email": req.body.email }, {
+    $set: {
+      "flag": false
+    }
+  }, function () {
     setTimeout(function () {
       res.status(200).send();
     }, 100)
-    delete require.cache[require.resolve('../models/data/users.json')];
-    let usersArr = require("../models/data/users.json");
   });
 });
 
