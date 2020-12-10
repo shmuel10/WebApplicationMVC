@@ -1,0 +1,667 @@
+<title>חנות הפרחים של שמחה</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+  /* Remove the navbar's default margin-bottom and rounded borders */
+  .navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+
+  /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+  .row.content {
+    height: 720px
+  }
+
+  /* Set gray background color and 100% height */
+  .sidenav {
+    padding-top: 20px;
+    background-color: #f1f1f1;
+    height: 100%;
+  }
+
+  /* Set black background color, white text and some padding */
+  footer {
+    background-color: #555;
+    color: white;
+    padding: 15px;
+  }
+
+  /* On small screens, set height to 'auto' for sidenav and grid */
+  @media screen and (max-width: 767px) {
+    .sidenav {
+      height: auto;
+      padding: 15px;
+    }
+
+    .row.content {
+      height: auto;
+    }
+  }
+
+  .open-button {
+    background-color: #555;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: fixed;
+    bottom: 23px;
+    right: 28px;
+    width: 280px;
+  }
+
+  /* The popup form - hidden by default */
+  .form-popup {
+    display: none;
+    position: fixed;
+    top: 55px;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+  }
+
+  .new-user-form-popup {
+    display: none;
+    position: fixed;
+    top: 120px;
+    margin: auto;
+
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+  }
+
+  /* Add styles to the form container */
+  .form-container {
+    max-width: 300px;
+    padding: 10px;
+    background-color: white;
+  }
+
+  .new-user-form-container {
+    max-width: 800px;
+  }
+
+  /* Full-width input fields */
+  .form-container input[type=text],
+  .form-container input[type=password],
+  .form-container input[type=tel],
+  .form-container select,
+  .form-container input[type=email] {
+    width: 95%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: #f1f1f1;
+  }
+
+  /* When the inputs get focus, do something */
+  .form-container input[type=text]:focus,
+  .form-container input[type=password]:focus,
+  .form-container input[type=tel]:focus,
+  .form-container select:focus,
+  .form-container input[type=email]:focus {
+    background-color: #ddd;
+    outline: none;
+  }
+
+  /* Set a style for the submit/login button */
+  .form-container .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+    opacity: 0.8;
+  }
+
+  /* Add some hover effects to buttons */
+  .form-container .btn:hover,
+  .open-button:hover {
+    opacity: 1;
+  }
+
+  /*about*/
+  .centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .text_style {
+    color: black;
+    font-size: large;
+    font-weight: 600;
+  }
+
+  .myImg {
+    width: 900px;
+    height: 720px;
+    margin-right: 0px;
+  }
+
+  /*contact*/
+  .contact_back {
+    background-color: #25274d;
+  }
+
+  .contact {
+    padding: 4%;
+    height: 400px;
+  }
+
+  .col-md-3 {
+    background: #ff9b00;
+    padding: 4%;
+    height: 345px;
+    width: 15vw;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+
+  .contact-info {
+    margin-top: 10%;
+  }
+
+  .contact-info img {
+    margin-bottom: 15%;
+  }
+
+  .contact-info h2 {
+    margin-bottom: 10%;
+  }
+
+  .col-md-9 {
+    background: #fff;
+    padding: 3%;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    height: 345px;
+    width: 50vw;
+  }
+
+  .center_contact {
+    position: absolute;
+    top: 30%;
+    left: 18%;
+  }
+
+  .contact-form label {
+    font-weight: 600;
+  }
+
+  .contact-form button {
+    background: #25274d;
+    color: #fff;
+    font-weight: 600;
+    width: 25%;
+  }
+
+  .contact-form button:focus {
+    box-shadow: none;
+  }
+
+  .header_icon_logo {
+    margin-top: 10%;
+    width: 40px;
+    height: 40px;
+  }
+
+  /*flower*/
+  .card {
+    border: 2px solid lightgray;
+    border-radius: 20%;
+    width: 200px;
+    text-align: center;
+    font-family: arial;
+    margin-right: 5px;
+    margin-bottom: 10px;
+  }
+
+  .title {
+    color: grey;
+    font-size: 18px;
+  }
+
+  button {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .social {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+  }
+
+  button:hover,
+  a:hover {
+    opacity: 0.7;
+  }
+
+  h5 {
+    color: red;
+  }
+
+  .grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .round_corner {
+    border-radius: 20%;
+  }
+
+  /*main*/
+  .center_class {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+
+  /*stores*/
+  .table-responsive {
+    margin: 30px 0;
+  }
+
+  .table-wrapper {
+    min-width: 1000px;
+    background: #fff;
+    padding: 20px 25px;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+  }
+
+  .table-title {
+    padding-bottom: 15px;
+    background: gray;
+    color: #fff;
+    padding: 16px 30px;
+    margin: 0px 0px 10px;
+    border-radius: 3px 3px 0 0;
+  }
+
+  .table-title h2 {
+    margin: 5px 0 0;
+    font-size: 24px;
+  }
+
+  .table-title .btn {
+    color: #566787;
+    float: right;
+    font-size: 13px;
+    background: #fff;
+    border: none;
+    min-width: 50px;
+    border-radius: 2px;
+    border: none;
+    outline: none !important;
+    margin-left: 10px;
+  }
+
+  .table-title .btn:hover,
+  .table-title .btn:focus {
+    color: #566787;
+    background: #f2f2f2;
+  }
+
+  .table-title .btn i {
+    float: left;
+    font-size: 21px;
+    margin-right: 5px;
+  }
+
+  .table-title .btn span {
+    float: left;
+    margin-top: 2px;
+  }
+
+  table.table tr th,
+  table.table tr td {
+    border-color: #e9e9e9;
+    padding: 12px 15px;
+    vertical-align: middle;
+  }
+
+  table.table tr th:first-child {
+    width: 60px;
+  }
+
+  table.table tr th:last-child {
+    width: 100px;
+  }
+
+  table.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fcfcfc;
+  }
+
+  table.table-striped.table-hover tbody tr:hover {
+    background: #f5f5f5;
+  }
+
+  table.table th i {
+    font-size: 13px;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+
+  table.table td:last-child i {
+    opacity: 0.9;
+    font-size: 22px;
+    margin: 0 5px;
+  }
+
+  table.table td a {
+    font-weight: bold;
+    color: #566787;
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  table.table td a:hover {
+    color: #2196F3;
+  }
+
+  table.table td a.settings {
+    color: #2196F3;
+  }
+
+  table.table td a.delete {
+    color: #F44336;
+  }
+
+  table.table td a.add {
+    color: green;
+  }
+
+  table.table td i {
+    font-size: 19px;
+  }
+
+  table.table .avatar {
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+
+  .status {
+    font-size: 30px;
+    margin: 2px 2px 0 0;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 10px;
+  }
+
+  .text-success {
+    color: #10c469;
+  }
+
+  .text-info {
+    color: #62c9e8;
+  }
+
+  .text-warning {
+    color: #FFC107;
+  }
+
+  .text-danger {
+    color: #ff5b5b;
+  }
+
+  .pagination {
+    float: right;
+    margin: 0 0 5px;
+  }
+
+  .pagination li a {
+    border: none;
+    font-size: 13px;
+    min-width: 30px;
+    min-height: 30px;
+    color: #999;
+    margin: 0 2px;
+    line-height: 30px;
+    border-radius: 2px !important;
+    text-align: center;
+    padding: 0 6px;
+  }
+
+  .pagination li a:hover {
+    color: #666;
+  }
+
+  .pagination li.active a,
+  .pagination li.active a.page-link {
+    background: #03A9F4;
+  }
+
+  .pagination li.active a:hover {
+    background: #0397d6;
+  }
+
+  .pagination li.disabled i {
+    color: #ccc;
+  }
+
+  .pagination li i {
+    font-size: 16px;
+    padding-top: 6px
+  }
+
+  .hint-text {
+    float: left;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+
+  .aboutBack {
+    background-image: url("images/AboutUsBackground.jpg");
+    width: 100%;
+    height: 88vh;
+  }
+
+  .div_size {
+    height: 88vh;
+    width: 100%;
+  }
+
+  .div_s {
+    min-height: 88vh;
+  }
+
+  .min_height {
+    height: 90vh;
+  }
+</style>
+
+<script>
+  $(document).ready(function () {
+    $(window).on("load", async function () {
+      if (user) {
+        user = user.replace(/&#34;/g, '"');
+        user = JSON.parse(user);
+        setLoggedinScreen(user.type, user.name);
+      }
+      console.log("href: ", window.location.hash);
+      switch (window.location.hash) {
+        case '#contact':
+          loadContact();
+          break;
+        case '#about':
+          loadAbout();
+          break;
+        case '#users':
+          loadUsers();
+          break;
+        case '#stores':
+          loadStores();
+          break;
+        case '#catalog':
+          loadCatalog();
+          break;
+        default:
+          loadAbout();
+          break;
+      }
+      console.log('user: ' + user);
+    });
+
+    $('#header').on("load", async function () {
+      let res = await fetch('/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        responseType: 'json'
+      });
+    });
+
+    $('#root').mouseup(function (event) {
+      let notLoggedIn = $('#notLoggedIn');
+      let loginForm = $('#loginFormDiv');
+      let newUserForm = $('#signupFormDiv')
+      let editUserForm = $('#editFormDiv')
+      if (!notLoggedIn.has(event.target).length > 0) {
+        if (!loginForm.has(event.target).length > 0) {
+          loginForm.css("display", "none");
+        }
+      }
+      if (!newUserForm.has(event.target).length > 0) {
+        newUserForm.css("display", "none");
+      }
+      if (!editUserForm.has(event.target).length > 0) {
+        editUserForm.css("display", "none");
+      }
+    });
+
+    $('#login').on('click', function () {
+      let loginForm = $('#loginFormDiv');
+      if (loginForm.css("display") === "block") {
+        $('#loginFormDiv').css("display", "none");
+      } else {
+        $('#loginFormDiv').css("display", "block");
+      }
+    });
+
+    $('#logbtn').on('click', async function (event) {
+      console.log("Enter login func");
+      let userMail = $('#email').val();
+      let userPassword = $('#psw').val();
+      let data = { "email": userMail, "password": userPassword };
+      try {
+        let res = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+        });
+        let detailes = await res.json();
+        let status = await res.status;
+        if (status === 200) {
+          let user = detailes.Myuser;
+          console.log("post user", user);
+          var newurl = window.location.pathname + '?user=' + user.email;
+          window.history.pushState({ path: newurl }, '', newurl);
+          setLoggedinScreen(user.type, user.name);
+          window.location.hash = "#catalog";
+          loadCatalog();
+        } else if (status === 401) {
+          alert("error");
+        }
+        console.log(detailes);
+      } catch (e) {
+
+      }
+    });
+
+    $('#aboutUs').on('click', function () {
+      loadAbout();
+    });
+
+    function loadAbout() {
+      $("#main").load('/about');
+    }
+
+    $('#contactUs').on('click', function () {
+      loadContact();
+    });
+
+    function loadContact() {
+      $("#main").load("/contact");
+    }
+
+    $('#flowersCatalog').on('click', function () {
+      loadCatalog();
+    });
+
+    function loadCatalog() {
+      $("#main").load("/flowers");
+    }
+
+    $('#manageStores').on('click', function () {
+      loadStores();
+    });
+
+    function loadStores() {
+      $("#main").load("/stores");
+    }
+
+    $('#manageUsers').on('click', function () {
+      loadUsers();
+    });
+    function loadUsers() {
+      $("#main").load("/users" + window.location.search);
+    }
+
+    $('#logOut').on('click', async function (event) {
+      var newurl = window.location.pathname;
+      window.history.pushState({ path: newurl }, '', newurl);
+      $('#notLoggedIn').css("display", "block");
+      $('#loggedIn').css("display", "none");
+      $('#helloUser').innerText = "";
+      $('#flowersCatalog').css("display", "none");
+      $('#manageUsers').css("display", "none");
+      $('#manageStores').css("display", "none");
+      loadAbout();
+    });
+
+    function setLoggedinScreen(type, name) {
+      $('#loginFormDiv').css("display", "none");
+      $('#loginForm').trigger('reset');
+      $('#notLoggedIn').css("display", "none");
+      $('#loggedIn').css("display", "block");
+      $('#helloUser').html("Hello " + name);
+      $('#flowersCatalog').css("display", "block");
+      if (type === "Admin" || type === "Officer") {
+        $('#manageUsers').css("display", "block");
+      }
+      if (type === "Admin") {
+        $('#manageStores').css("display", "block");
+      }
+    }
+  });
+</script>

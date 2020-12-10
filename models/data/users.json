@@ -1,0 +1,83 @@
+[
+    {
+        "email": "Yaakov@gmail.com",
+        "password": "1235",
+        "name": "שמחה פדולסקי",
+        "phone": "0556679808",
+        "type": "Client",
+        "city": "בית שמש",
+        "flag": true
+    },
+    {
+        "email": "Simcha@gmail.com",
+        "password": "1234",
+        "name": "Simcha",
+        "phone": "0556679803",
+        "type": "Admin",
+        "city": "Jafo",
+        "flag": true
+    },
+    {
+        "email": "Reuma@gmail.com",
+        "password": "2222",
+        "name": "Reuma",
+        "phone": "0558066794",
+        "type": "Client",
+        "city": "Charan",
+        "flag": true
+    },
+    {
+        "email": "Moshe@gmail.com",
+        "password": "1234",
+        "name": "Moshe",
+        "phone": "0558046679",
+        "type": "Officer",
+        "city": "Bne Brak",
+        "flag": false
+    },
+    {
+        "email": "Shmuel@gmail.com",
+        "password": "1234",
+        "name": "Shmuel Vazana",
+        "phone": "0589804566",
+        "type": "Client",
+        "city": "Netanya",
+        "flag": false
+    },
+    {
+        "email": "Simchapo@gmail.com",
+        "password": "147",
+        "name": "שמחה פדולסקי",
+        "phone": "0556679804",
+        "type": "Admin",
+        "city": "בית שמש",
+        "flag": true
+    },
+    {
+        "email": "Simchapodo@gmail.com",
+        "password": "12345",
+        "name": "שמחה פדולסקי",
+        "phone": "0556679804",
+        "type": "Admin",
+        "city": "בית שמש",
+        "flag": true
+    },
+    {
+        "email": "m@gmail.com",
+        "password": "1247",
+        "name": "מרדכי",
+        "phone": "0501478523",
+        "type": "Officer",
+        "city": "חולון",
+        "flag": false
+    },
+    {
+        "email": "Ella@gmail.com",
+        "password": "1111",
+        "name": "Ella",
+        "phone": "0566759803",
+        "type": "Officer",
+        "city": "Bet Shemesh",
+        "flag": false
+    }
+]
