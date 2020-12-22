@@ -24,58 +24,6 @@ module.exports = db => {
         return this.name;
     };
 
-    schema.statics.CREATE = async function (user) {
-        return this.create({
-            email: user[0],
-            password: user[1],
-            name: user[2],
-            phone: user[3],
-            type: user[4],
-            city: user[5],
-            flag: user[6],
-        });
-    };
-
-    schema.statics.UPDATE = async function (user) {
-        console.log("user to update", user);
-        if (user.hasOwnProperty("password")) {
-            return this.updateOne({ "email": user.email, "flag": true }, {
-                $set: {
-                    "password": user.password, "name": user.name,
-                    "phone": user.phone, "type": user.type, "city": user.city, updated_at: new Date()
-                }, function() {
-                    setTimeout(function () {
-                        res.status(200).send();
-                    }, 100)
-                }
-            });
-        } else {
-            return this.updateOne({ "email": user.email, "flag": true }, {
-                $set: {
-                    "name": user.name,
-                    "phone": user.phone, "city": user.city, updated_at: new Date()
-                }, function() {
-                    setTimeout(function () {
-                        res.status(200).send();
-                    }, 100)
-                }
-            });
-        }
-    }
-
-    schema.statics.DELETE = async function (user) {
-        console.log("user to delete", user);
-        return this.updateOne({ "email": user.email, "flag": true }, {
-            $set: {
-                "flag": false, updated_at: new Date()
-            }, function() {
-                setTimeout(function () {
-                    res.status(200).send();
-                }, 100)
-            }
-        });
-    }
-
     // on every save, add the date
     schema.pre('save', function (next) {
         // get the current date
@@ -87,6 +35,18 @@ module.exports = db => {
             this.created_at = currentDate;
         next();
     });
+    
+    schema.statics.CREATE = async function (user) {
+        return this.create({
+            email: user[0],
+            password: user[1],
+            name: user[2],
+            phone: user[3],
+            type: user[4],
+            city: user[5],
+            flag: user[6],
+        });
+    };
 
     schema.statics.REQUEST = async function () {
         // no arguments - bring all at once
@@ -132,9 +92,46 @@ module.exports = db => {
         return this.find(...args).exec();
     };
 
-    // the schema is useless so far
-    // we need to create a model using it
-    // db.model('User', schema, 'User'); // (model, schema, collection)
-    db.model('User', schema); // if model name === collection name
+    schema.statics.UPDATE = async function (user) {
+        console.log("user to update", user);
+        if (user.hasOwnProperty("password")) {
+            return this.updateOne({ "email": user.email, "flag": true }, {
+                $set: {
+                    "password": user.password, "name": user.name,
+                    "phone": user.phone, "type": user.type, "city": user.city, updated_at: new Date()
+                }, function() {
+                    setTimeout(function () {
+                        res.status(200).send();
+                    }, 100)
+                }
+            });
+        } else {
+            return this.updateOne({ "email": user.email, "flag": true }, {
+                $set: {
+                    "name": user.name,
+                    "phone": user.phone, "city": user.city, updated_at: new Date()
+                }, function() {
+                    setTimeout(function () {
+                        res.status(200).send();
+                    }, 100)
+                }
+            });
+        }
+    }
+
+    schema.statics.DELETE = async function (user) {
+        console.log("user to delete", user);
+        return this.updateOne({ "email": user.email, "flag": true }, {
+            $set: {
+                "flag": false, updated_at: new Date()
+            }, function() {
+                setTimeout(function () {
+                    res.status(200).send();
+                }, 100)
+            }
+        });
+    }
+
+    db.model('User', schema); 
     debug("User model created");
 };

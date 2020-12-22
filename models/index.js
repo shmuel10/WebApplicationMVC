@@ -14,6 +14,5 @@ debug('Pending DB connection');
 require("./user")(db);
 require("./flower")(db);
 require("./store")(db);
-require("./todo")(db);
 
 module.exports = model => db.model(model);

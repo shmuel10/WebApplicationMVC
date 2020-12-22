@@ -498,6 +498,7 @@
 
 <script>
   $(document).ready(function () {
+
     $(window).on("load", async function () {
       if (user) {
         user = user.replace(/&#34;/g, '"');
@@ -521,7 +522,7 @@
         case '#catalog':
           loadCatalog();
           break;
-        default:
+        case '':
           loadAbout();
           break;
       }
@@ -633,8 +634,9 @@
     $('#manageUsers').on('click', function () {
       loadUsers();
     });
+
     function loadUsers() {
-      $("#main").load("/users" + window.location.search);
+      $("#main").load("/user" + window.location.search);
     }
 
     $('#logOut').on('click', async function (event) {

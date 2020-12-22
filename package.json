@@ -5,12 +5,12 @@
   "scripts": {
     "start": "node ./bin/www",
     "mongo": "node mongo.js",
-    "addUser": "node adduser.js",
-    "usersList": "node listusers.js",
-    "addFlower": "node addFlower.js",
-    "flowersList": "node listflowers.js",
-    "addStore": "node addStore.js",
-    "storesList": "node liststores.js"
+    "addUser": "node ./add/adduser.js",
+    "usersList": "node ./add/listusers.js",
+    "addFlower": "node ./add/addFlower.js",
+    "flowersList": "node ./add/listflowers.js",
+    "addStore": "node ./add/addStore.js",
+    "storesList": "node ./add/liststores.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.5",
@@ -20,6 +20,7 @@
     "http-errors": "^1.6.3",
     "mongoose": "^5.11.6",
     "morgan": "^1.9.1",
+    "multer": "^1.4.2",
     "path": "^0.12.7"
   }
 }

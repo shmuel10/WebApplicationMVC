@@ -1,3 +1,71 @@
+<head>
+    <style>
+        h3 {
+            display: none;
+        }
+
+        .nobr {
+            display: flex;
+            margin-left: 30%;
+        }
+
+        .center {
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .sizeImg {
+            position: absolute;
+            height: 90px;
+            width: 90px;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            let flowerID;
+            $('.card').on('click', function () {
+                let edit = $('#editFormDiv');
+                var imgSrc = $(this).children().find("#flowerImg")[0].currentSrc;
+                document.getElementById("editFlowerImg").src = imgSrc;
+                edit.children().find("#editFlowerImg")[0] = imgSrc;
+                flowerID = $(this).children().find("#flowerID").text();
+                edit.children().find('#editFlowerID').val(flowerID);
+                var name = $(this).children().find("#flowerName").text();
+                edit.children().find('#editFlowerName').val(name);
+                var price = $(this).children().find("#flowerPrice").text();
+                edit.children().find('#editFlowerPrice').val(price);
+                var picturePath = $(this).children().find("#flowerImg")[0].currentSrc;
+                edit.children().find('#editFlowerPicture').val(picturePath);
+                edit.css("display", "block");
+            });
+
+            $('#editFlowerBtn').on('click', function () {
+                console.log("edit user btn");
+                let updatedFlower = {
+                    "id": flowerID,
+                    "name": $('#editFlowerName').val(),
+                    "price": $('#editFlowerPrice').val(),
+                    "picture": $('#editFlowerPicture').val(),
+                };
+                console.log(JSON.stringify(updatedFlower));
+                console.log($('#imgFile'))
+                let res = fetch('/flower', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedFlower),
+                });
+                $('#editFormDiv').css("display", "none");
+            });
+        });
+    </script>
+</head>
+
 <header>
     <section class="jumbotron text-center">
         <div class="container">
@@ -10,15 +78,49 @@
 <body>
     <div class="text-center grid">
         <% flowersCatalog.forEach(function(flower) { %>
-        <div class="card">
-            <div style="height: 80px;">
-                <img src="<%= flower.picture %>" alt="..." class="round_corner" width="100%" height="100%">
+            <div class="card">
+                <div style="height: 80px;">
+                    <img id="flowerImg" src="<%= flower.picture %>" alt="..." class="round_corner" width="100%"
+                        height="100%">
+                </div>
+                <div class="card-body">
+                    <h3 id="flowerID">
+                        <%= flower.id %>
+                    </h3>
+                    <h5 id="flowerName" class="card-title">
+                        <%= flower.name %>
+                    </h5>
+                    <div class="nobr">
+                        <h4>Price:</h4>
+                        <h4 id="flowerPrice" class="card-title">
+                            <%= flower.price %>
+                        </h4>
+                        <h4>₪</h4>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title"><%= flower.name %></h5>
-                <h4 class="card-title" id="flowerPrice">Price:  <%= flower.price %>  ₪</h5>
+            <% }) %>
+    </div>
+    <div id="editFormDiv" class="new-user-form-popup">
+        <form class="form-container new-user-form-container" onsubmit="return false">
+            <h4 class="text-center">Edit Flower</h4>
+            <div style="width:100%; float: left;">
+                <label for="editFlowerImg"></label>
+                <img id="editFlowerImg" src="" class="round_corner centered sizeImg">
+                <input id="imgFile" type="file" name="myImage" accept="image/*"/>
+                <input type="submit" value="Upload Photo" />
+                <br>
+                <label for="editFlowerID"><b>Flower ID</b></label>
+                <input readonly type="text" placeholder="Flower ID" id="editFlowerID" name="editFlowerID" required>
+                <label for="editFlowerName"><b>Flower name</b></label>
+                <input type="text" placeholder="Enter flower name" id="editFlowerName" name="editFlowerName" required>
+                <label for="editFlowerPrice"><b>Flower price</b></label>
+                <input type="text" placeholder="Enter store name" id="editFlowerPrice" name="editFlowerPrice" required>
+                <label for="editFlowerPicture"><b>Flower Picture</b></label>
+                <input type="text" placeholder="Enter Picture Path" id="editFlowerPicture" name="editFlowerPicture"
+                    required>
             </div>
-        </div>
-        <% }) %>
+            <button type="submit" class="btn" id="editFlowerBtn">Update Flower</button>
+        </form>
     </div>
 </body>

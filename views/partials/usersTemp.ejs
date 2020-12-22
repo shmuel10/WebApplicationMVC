@@ -23,8 +23,8 @@
                 if (usersType === 'Admin') {
                     $("#editUserPsw").val($(cols[i++]).text());
                 }
-
             });
+
             $(".delete").on('click', function () {
                 let editForm = $('#editFormDiv');
                 let cols = $(this).closest("tr").children('td');
@@ -32,16 +32,16 @@
                         "email": $(cols[2]).text()
                 }
                 console.log(JSON.stringify(deleteUser));
-                let res = fetch('/deleteuser', {
-                    method: 'POST',
+                let res = fetch('/user', {
+                    method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(deleteUser),
-                });
+                }).then(loadUsers());
                 $('#editFormDiv').css("display", "none");
-
             });
+
             $('#addUser').on('click', function () {
                 let signupForm = $('#signupFormDiv');
                 if (signupForm.css("display") === "block") {
@@ -50,20 +50,23 @@
                     $('#signupFormDiv').css("display", "block");
                 }
             });
+
             $('#refreshUsers').on('click', function () {
                 console.log("refresh")
                 loadUsers();
             });
+
             function loadUsers() {
                 $.ajax({
                     type: "GET",
-                    url: "/users" + window.location.search,
+                    url: "/user" + window.location.search,
                     success: function (res) {
                         console.log("res: ", res);
                         $("#main").html(res);
                     }
                 });
             }
+
             $('#addUserBtn').on('click', function () {
                 console.log("add user btn");
                 let newUser;
@@ -88,17 +91,17 @@
                         "flag": true
                     };
                 }
-
                 console.log(JSON.stringify(newUser));
-                let res = fetch('/newuser', {
+                let res = fetch('/user', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(newUser),
-                });
+                }).then(loadUsers());
                 $('#signupFormDiv').css("display", "none");
             });
+            
             $('#editUserBtn').on('click', function () {
                 console.log("edit user btn");
                 let updatedUser;
@@ -123,13 +126,13 @@
                     };
                 }
                 console.log(JSON.stringify(updatedUser));
-                let res = fetch('/updateuser', {
-                    method: 'POST',
+                let res = fetch('/user', {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(updatedUser),
-                });
+                }).then(loadUsers());
                 $('#editFormDiv').css("display", "none");
             })
         });
@@ -255,6 +258,6 @@
             <label for="city"><b>City</b></label>
             <input type="text" placeholder="Enter City" id="editUserCity" name="city" required>
         </div>
-        <button type="submit" class="btn" id='editUserBtn'>Edit User</button>
+        <button type="submit" class="btn" id='editUserBtn'>Update User</button>
     </form>
 </div>

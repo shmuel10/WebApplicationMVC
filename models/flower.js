@@ -1,4 +1,5 @@
 const debug = require("debug")("mongo:model-flower");
+const multer = require('multer');
 const mongo = require("mongoose");
 
 module.exports = db => {
@@ -8,18 +9,10 @@ module.exports = db => {
         name: { type: String, required: true },
         price: { type: String, required: true },
         picture: { type: String, required: true },
+        flag: { type: Boolean, required: true },
         created_at: Date,
         updated_at: Date
     }, { autoIndex: false });
-
-    schema.statics.CREATE = async function (flower) {
-        return this.create({
-            id: flower[0],
-            name: flower[1],
-            price: flower[2],
-            picture: flower[3],
-        });
-    };
 
     // on every save, add the date
     schema.pre('save', function (next) {
@@ -32,6 +25,16 @@ module.exports = db => {
             this.created_at = currentDate;
         next();
     });
+
+    schema.statics.CREATE = async function (flower) {
+        return this.create({
+            id: flower[0],
+            name: flower[1],
+            price: flower[2],
+            picture: flower[3],
+            flag : flower[4]
+        });
+    };
 
     schema.statics.REQUEST = async function () {
         const args = Array.from(arguments);
@@ -72,6 +75,32 @@ module.exports = db => {
         debug(`request: without callback: ${JSON.stringify(args)}`);
         return this.find(...args).exec();
     };
+
+    schema.statics.UPDATE = async function (flower) {
+        return this.updateOne({ "id": flower.id, "flag": true }, {
+            $set: {
+                "name": flower.name, "price": flower.price, "picture": flower.picture, updated_at: new Date()
+            }, function() {
+                setTimeout(function () {
+                    res.status(200).send();
+                }, 100)
+            }
+        });
+    }
+
+    schema.statics.DELETE = async function (flower) {
+        return this.updateOne({ "id": flower.id },
+            {
+                $set: {
+                    updated_at: new Date(), flag: false
+                },
+                function() {
+                    setTimeout(function () {
+                        res.status(200).send();
+                    }, 100)
+                }
+            });
+    }
 
     db.model('Flower', schema);
     debug("Flower model created");
