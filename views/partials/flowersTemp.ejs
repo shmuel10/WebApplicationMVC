@@ -43,7 +43,9 @@
                 edit.css("display", "block");
             });
 
-            $('#editFlowerBtn').on('click', function () {
+            $('#editForm').on('submit', function () {
+                let formdata = new FormData(this);
+                console.log("For simcha" , formdata)
                 console.log("edit user btn");
                 let updatedFlower = {
                     "id": flowerID,
@@ -55,13 +57,11 @@
                 console.log($('#imgFile'))
                 let res = fetch('/flower', {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(updatedFlower),
+                    data: formdata,
                 });
                 $('#editFormDiv').css("display", "none");
             });
+
         });
     </script>
 </head>
@@ -102,13 +102,13 @@
             <% }) %>
     </div>
     <div id="editFormDiv" class="new-user-form-popup">
-        <form class="form-container new-user-form-container" onsubmit="return false">
+        <form id="editForm" class="form-container new-user-form-container" onsubmit="return false"
+            enctype="multipart/form-data">
             <h4 class="text-center">Edit Flower</h4>
             <div style="width:100%; float: left;">
                 <label for="editFlowerImg"></label>
                 <img id="editFlowerImg" src="" class="round_corner centered sizeImg">
-                <input id="imgFile" type="file" name="myImage" accept="image/*"/>
-                <input type="submit" value="Upload Photo" />
+                <input type="file" name="myImage" accept="image/*" />
                 <br>
                 <label for="editFlowerID"><b>Flower ID</b></label>
                 <input readonly type="text" placeholder="Flower ID" id="editFlowerID" name="editFlowerID" required>

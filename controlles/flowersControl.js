@@ -19,7 +19,7 @@ const flower_list = async function (req, res, next) {
 }
 
 const update_flower = async function (req, res, next) {
-    console.log('updateuser', req.body);
+    console.log('req1 : ', req);
     try {
         let updatedFlower = req.body;
         await Flower.UPDATE(updatedFlower);
