@@ -1,7 +1,5 @@
 const debug = require("debug")("mongo:model-flower");
-const multer = require('multer');
 const mongo = require("mongoose");
-const path = require("path");
 
 module.exports = db => {
     // create a schema
@@ -33,7 +31,7 @@ module.exports = db => {
             name: flower[1],
             price: flower[2],
             picture: flower[3],
-            flag : flower[4]
+            flag: flower[4]
         });
     };
 
@@ -76,19 +74,8 @@ module.exports = db => {
         debug(`request: without callback: ${JSON.stringify(args)}`);
         return this.find(...args).exec();
     };
-    const storage = multer.diskStorage({
-        destination: './public/images/',
-        filename: function(req,file,cb){
-            cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-        }
-    })
 
-    const upload = multer ({
-        storage : storage
-    }).single('myImage')
-
-    schema.statics.UPDATE = async function (req,res) {
-        console.log("req", req);
+    schema.statics.UPDATE = async function (flower) {
         return this.updateOne({ "id": flower.id, "flag": true }, {
             $set: {
                 "name": flower.name, "price": flower.price, "picture": flower.picture, updated_at: new Date()

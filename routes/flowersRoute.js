@@ -5,7 +5,7 @@ const flowerRoute = require('../controlles/flowersControl');
 
 router.get('/flowers', flowerRoute.flower_list);
 router.post('/flower', flowerRoute.new_flower);
-router.put('/flower', flowerRoute.update_flower);
+router.post('/updateFlower', flowerRoute.update_flower);
 router.delete('/flower', flowerRoute.delete_flower);
 
 module.exports = router;

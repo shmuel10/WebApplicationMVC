@@ -9,12 +9,6 @@
             margin-left: 30%;
         }
 
-        .center {
-            top: 10%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
         .sizeImg {
             position: absolute;
             height: 90px;
@@ -32,36 +26,19 @@
                 var imgSrc = $(this).children().find("#flowerImg")[0].currentSrc;
                 document.getElementById("editFlowerImg").src = imgSrc;
                 edit.children().find("#editFlowerImg")[0] = imgSrc;
-                flowerID = $(this).children().find("#flowerID").text();
+                flowerID = $(this).children().find("#flowerID").text().trim();
                 edit.children().find('#editFlowerID').val(flowerID);
-                var name = $(this).children().find("#flowerName").text();
+                console.log("id: ", flowerID);
+                var name = $(this).children().find("#flowerName").text().trim();
                 edit.children().find('#editFlowerName').val(name);
-                var price = $(this).children().find("#flowerPrice").text();
+                var price = $(this).children().find("#flowerPrice").text().trim();
                 edit.children().find('#editFlowerPrice').val(price);
                 var picturePath = $(this).children().find("#flowerImg")[0].currentSrc;
-                edit.children().find('#editFlowerPicture').val(picturePath);
+                edit.children().find('#editFlowerPicturePath').val(picturePath);
                 edit.css("display", "block");
             });
 
-            $('#editForm').on('submit', function () {
-                let formdata = new FormData(this);
-                console.log("For simcha" , formdata)
-                console.log("edit user btn");
-                let updatedFlower = {
-                    "id": flowerID,
-                    "name": $('#editFlowerName').val(),
-                    "price": $('#editFlowerPrice').val(),
-                    "picture": $('#editFlowerPicture').val(),
-                };
-                console.log(JSON.stringify(updatedFlower));
-                console.log($('#imgFile'))
-                let res = fetch('/flower', {
-                    method: 'PUT',
-                    data: formdata,
-                });
-                $('#editFormDiv').css("display", "none");
-            });
-
+           
         });
     </script>
 </head>
@@ -102,13 +79,13 @@
             <% }) %>
     </div>
     <div id="editFormDiv" class="new-user-form-popup">
-        <form id="editForm" class="form-container new-user-form-container" onsubmit="return false"
+        <form id="editForm" class="form-container new-user-form-container" method="POST" action="/updateFlower"
             enctype="multipart/form-data">
             <h4 class="text-center">Edit Flower</h4>
             <div style="width:100%; float: left;">
                 <label for="editFlowerImg"></label>
                 <img id="editFlowerImg" src="" class="round_corner centered sizeImg">
-                <input type="file" name="myImage" accept="image/*" />
+                <input type="file" name="myImage" id="myImage" accept="image/*" />
                 <br>
                 <label for="editFlowerID"><b>Flower ID</b></label>
                 <input readonly type="text" placeholder="Flower ID" id="editFlowerID" name="editFlowerID" required>
@@ -116,11 +93,13 @@
                 <input type="text" placeholder="Enter flower name" id="editFlowerName" name="editFlowerName" required>
                 <label for="editFlowerPrice"><b>Flower price</b></label>
                 <input type="text" placeholder="Enter store name" id="editFlowerPrice" name="editFlowerPrice" required>
-                <label for="editFlowerPicture"><b>Flower Picture</b></label>
-                <input type="text" placeholder="Enter Picture Path" id="editFlowerPicture" name="editFlowerPicture"
+                <label for="editFlowerPicturePath"><b>Flower Picture</b></label>
+                <input type="text" placeholder="Enter Picture Path" id="editFlowerPicturePath" name="editFlowerPicturePath"
                     required>
             </div>
             <button type="submit" class="btn" id="editFlowerBtn">Update Flower</button>
         </form>
+
+
     </div>
 </body>
