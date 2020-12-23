@@ -76,15 +76,28 @@ module.exports = db => {
     };
 
     schema.statics.UPDATE = async function (flower) {
-        return this.updateOne({ "id": flower.id, "flag": true }, {
-            $set: {
-                "name": flower.name, "price": flower.price, "picture": flower.picture, updated_at: new Date()
-            }, function() {
-                setTimeout(function () {
-                    res.status(200).send();
-                }, 100)
-            }
-        });
+        console.log("flower to update: ", flower);
+        if (flower.hasOwnProperty("picture")) {
+            return this.updateOne({ "id": flower.editFlowerID, "flag": true }, {
+                $set: {
+                    "name": flower.editFlowerName, "price": flower.editFlowerPrice, "picture": flower.picture, updated_at: new Date()
+                }, function() {
+                    setTimeout(function () {
+                        res.status(200).send();
+                    }, 100)
+                }
+            });
+        } else {
+            return this.updateOne({ "id": flower.editFlowerID, "flag": true }, {
+                $set: {
+                    "name": flower.editFlowerName, "price": flower.editFlowerPrice, updated_at: new Date()
+                }, function() {
+                    setTimeout(function () {
+                        res.status(200).send();
+                    }, 100)
+                }
+            });
+        }
     }
 
     schema.statics.DELETE = async function (flower) {

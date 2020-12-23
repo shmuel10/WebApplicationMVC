@@ -17,6 +17,7 @@
     "debug": "^2.6.9",
     "ejs": "^2.5.7",
     "express": "^4.16.4",
+    "express-formidable": "^1.2.0",
     "http-errors": "^1.6.3",
     "mongoose": "^5.11.6",
     "morgan": "^1.9.1",

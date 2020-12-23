@@ -2,6 +2,8 @@ const { json } = require('express');
 const multer = require('multer');
 var path = require('path');
 const Flower = require('../models')("Flower");
+var fs = require('fs');
+const { url } = require('inspector');
 
 const new_flower = async function (req, res, next) {
     console.log('newflower', req.body);
@@ -37,16 +39,24 @@ const upload = multer({
 
 const update_flower = async function (req, res, next) {
     try {
-        let updatedFlower = req.body;
-        upload(req, res, (err) => {
-            // console.log(req.file.path);
-            if (typeof (req.file) != "undefined") {
-                let pict = JSON.stringify(req.file);
-                let pictJson = JSON.parse(pict);
-                updatedFlower.picture = pictJson.path;
-                console.log("45", updatedFlower)
-            }
-        });
+        console.log("45", req.fields, '\n', "46", req.files);
+        let updatedFlower = req.fields;
+        var oldPath = req.files.myImage.path;
+        var newPath = './public/images/' + req.files.myImage.name
+        var rawData = fs.readFileSync(oldPath)
+
+        fs.writeFile(newPath, rawData, function (err) {
+            if (err) console.log(err)
+            else console.log("sucsseful");
+        })
+        console.log("files: ", req.files.myImage.size);
+        if (req.files.myImage.size > 0) {
+            let pict = JSON.stringify(req.files.myImage);
+            let pictJson = JSON.parse(pict);
+            updatedFlower.picture = newPath.replace('./public/', '');
+            console.log("45", updatedFlower)
+        }
+
         //req.body.picture = req.file.path;
         await Flower.UPDATE(updatedFlower);
     } catch (err) { throw err; }
