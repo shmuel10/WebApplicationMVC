@@ -16,6 +16,7 @@
             top: 10%;
             left: 50%;
             transform: translate(-50%, -50%);
+            cursor: pointer;
         }
     </style>
     <script>
@@ -38,6 +39,22 @@
                 edit.css("display", "block");
             });
 
+            $(function () {
+                $('#myImage').change(function () {
+                    var input = this;
+                    var url = $(this).val();
+                    var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+                    if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            $('#editFlowerImg').attr('src', e.target.result);
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                });
+
+            });
 
         });
     </script>
@@ -78,14 +95,15 @@
         </div>
         <% }) %>
     </div>
-    <div id="editFormDiv" class="new-user-form-popup">
+    <div id="editFormDiv" class="new-flower-form-popup">
         <form id="editForm" class="form-container new-user-form-container" method="POST" action="/updateFlower"
             enctype="multipart/form-data">
             <h4 class="text-center">Edit Flower</h4>
             <div style="width:100%; float: left;">
-                <label for="editFlowerImg"></label>
-                <img id="editFlowerImg" src="" class="round_corner centered sizeImg">
-                <input type="file" name="myImage" id="myImage" accept="image/*" />
+                <label for="myImage">
+                    <img id="editFlowerImg" src="" class="round_corner centered sizeImg">
+                    <input style="display: none;" type="file" name="myImage" id="myImage" accept="image/*" />
+                </label>
                 <br>
                 <label for="editFlowerID"><b>Flower ID</b></label>
                 <input readonly type="text" placeholder="Flower ID" id="editFlowerID" name="editFlowerID" required>
