@@ -41,23 +41,19 @@ const update_flower = async function (req, res, next) {
     try {
         console.log("45", req.fields, '\n', "46", req.files);
         let updatedFlower = req.fields;
-        var oldPath = req.files.myImage.path;
-        var newPath = './public/images/' + req.files.myImage.name
-        var rawData = fs.readFileSync(oldPath)
-
-        fs.writeFile(newPath, rawData, function (err) {
-            if (err) console.log(err)
-            else console.log("sucsseful");
-        })
-        console.log("files: ", req.files.myImage.size);
-        if (req.files.myImage.size > 0) {
-            let pict = JSON.stringify(req.files.myImage);
-            let pictJson = JSON.parse(pict);
+        var imageFile = req.files.myImage;
+        console.log("files: ", imageFile.size);
+        if (imageFile.size > 0) {
+            var oldPath = imageFile.path;
+            var newPath = './public/images/' + imageFile.name
+            var rawData = fs.readFileSync(oldPath)
+            fs.writeFile(newPath, rawData, function (err) {
+                if (err) console.log(err)
+                else console.log("sucsseful");
+            })
             updatedFlower.picture = newPath.replace('./public/', '');
             console.log("45", updatedFlower)
         }
-
-        //req.body.picture = req.file.path;
         await Flower.UPDATE(updatedFlower);
     } catch (err) { throw err; }
 }
