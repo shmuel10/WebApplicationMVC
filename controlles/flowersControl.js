@@ -1,5 +1,4 @@
 const { json } = require('express');
-const multer = require('multer');
 var path = require('path');
 const Flower = require('../models')("Flower");
 var fs = require('fs');
@@ -22,20 +21,6 @@ const flower_list = async function (req, res, next) {
         res.render('partials/flowersTemp', { "flowersCatalog": flowersArr });
     }, 100)
 }
-
-const storage = multer.diskStorage({
-    destination: './public/',
-    filename: function (req, file, cb) {
-        console.log("439", file.originalname)
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
-
-// Init Upload
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 1000000 }
-}).single('myImage');
 
 const update_flower = async function (req, res, next) {
     try {

@@ -6,7 +6,7 @@ const formidable = require('express-formidable');
 router.use('/updateFlower', formidable());
 router.get('/flowers', flowerRoute.flower_list);
 router.post('/flower', flowerRoute.new_flower);
-router.post('/updateFlower', flowerRoute.update_flower);
+router.put('/updateFlower', flowerRoute.update_flower);
 router.delete('/flower', flowerRoute.delete_flower);
 
 module.exports = router;

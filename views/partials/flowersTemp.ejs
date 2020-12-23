@@ -39,22 +39,33 @@
                 edit.css("display", "block");
             });
 
-            $(function () {
-                $('#myImage').change(function () {
-                    var input = this;
-                    var url = $(this).val();
-                    var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
-                    if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
-                        var reader = new FileReader();
 
-                        reader.onload = function (e) {
-                            $('#editFlowerImg').attr('src', e.target.result);
-                        }
-                        reader.readAsDataURL(input.files[0]);
+            $('#myImage').change(function () {
+                var input = this;
+                var url = $(this).val();
+                var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+                if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#editFlowerImg').attr('src', e.target.result);
                     }
-                });
-
+                    reader.readAsDataURL(input.files[0]);
+                }
             });
+
+            $('#editFlowerBtn').on('click', function () {
+                var form = $('#editForm').get(0); 
+                console.log("edit flower btn");
+                var formdata = new FormData(form);
+                
+                let res = fetch('/updateFlower', {
+                    method: 'put',
+                    body: formdata,
+                    processData: false,
+                    contentType: false,
+                });
+                $('#editFormDiv').css("display", "none");
+            })
 
         });
     </script>
@@ -96,8 +107,8 @@
         <% }) %>
     </div>
     <div id="editFormDiv" class="new-flower-form-popup">
-        <form id="editForm" class="form-container new-user-form-container" method="POST" action="/updateFlower"
-            enctype="multipart/form-data">
+        <form id="editForm" class="form-container new-user-form-container" method="POST"
+            enctype="multipart/form-data" onsubmit="return false">
             <h4 class="text-center">Edit Flower</h4>
             <div style="width:100%; float: left;">
                 <label for="myImage">
