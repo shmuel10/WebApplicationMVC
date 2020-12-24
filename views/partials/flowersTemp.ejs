@@ -35,7 +35,7 @@
                 var price = $(this).children().find("#flowerPrice").text().trim();
                 edit.children().find('#editFlowerPrice').val(price);
                 var picturePath = $(this).children().find("#flowerImg")[0].currentSrc;
-                edit.children().find('#editFlowerPicturePath').val(picturePath);
+                edit.children().find('#imageURL').val(picturePath);
                 edit.css("display", "block");
             });
 
@@ -48,16 +48,27 @@
                     var reader = new FileReader();
                     reader.onload = function (e) {
                         $('#editFlowerImg').attr('src', e.target.result);
+                        $('#imageURL').val('');
                     }
                     reader.readAsDataURL(input.files[0]);
                 }
             });
 
+            $('#imageURL').change(function () {
+                if ($('#imageURL').val().match(/\.(jpeg|jpg|gif|png)$/) != null) {
+                    $('#editFlowerImg').attr("src", $('#imageURL').val());
+                    $('#myImage').val('');
+                }
+                else {
+                    $('#imageURL').val('');
+                }
+            });
+
             $('#editFlowerBtn').on('click', function () {
-                var form = $('#editForm').get(0); 
+                var form = $('#editForm').get(0);
                 console.log("edit flower btn");
                 var formdata = new FormData(form);
-                
+
                 let res = fetch('/updateFlower', {
                     method: 'put',
                     body: formdata,
@@ -75,7 +86,7 @@
     <section class="jumbotron text-center">
         <div class="container">
             <h1>Our flowers</h1>
-            <p>Our flowers is best flowers in the world! <br> We are thinking and coding! </p>
+            <p>Our flowers are the best flowers in the world! <br> We are thinking and coding! </p>
         </div>
     </section>
 </header>
@@ -107,8 +118,8 @@
         <% }) %>
     </div>
     <div id="editFormDiv" class="new-flower-form-popup">
-        <form id="editForm" class="form-container new-user-form-container" method="POST"
-            enctype="multipart/form-data" onsubmit="return false">
+        <form id="editForm" class="form-container new-user-form-container" method="POST" enctype="multipart/form-data"
+            onsubmit="return false">
             <h4 class="text-center">Edit Flower</h4>
             <div style="width:100%; float: left;">
                 <label for="myImage">
@@ -116,6 +127,8 @@
                     <input style="display: none;" type="file" name="myImage" id="myImage" accept="image/*" />
                 </label>
                 <br>
+                <label for="imageURL"><b>Image Url</b></label>
+                <input type="url" placeholder="Flower Image Source" id="imageURL" name="imageURL">
                 <label for="editFlowerID"><b>Flower ID</b></label>
                 <input readonly type="text" placeholder="Flower ID" id="editFlowerID" name="editFlowerID" required>
                 <label for="editFlowerName"><b>Flower name</b></label>

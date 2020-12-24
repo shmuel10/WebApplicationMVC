@@ -28,6 +28,7 @@ const update_flower = async function (req, res, next) {
         let updatedFlower = req.fields;
         var imageFile = req.files.myImage;
         console.log("files: ", imageFile.size);
+        console.log("fields: ", updatedFlower);
         if (imageFile.size > 0) {
             var oldPath = imageFile.path;
             var newPath = './public/images/' + imageFile.name
@@ -38,6 +39,10 @@ const update_flower = async function (req, res, next) {
             })
             updatedFlower.picture = newPath.replace('./public/', '');
             console.log("45", updatedFlower)
+        }
+        else if(updatedFlower.imageURL != ''){
+            console.log("url:",updatedFlower.imageURL);
+            updatedFlower.picture = updatedFlower.imageURL;
         }
         await Flower.UPDATE(updatedFlower);
     } catch (err) { throw err; }
