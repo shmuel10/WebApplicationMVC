@@ -2,6 +2,7 @@ const { json } = require('express');
 var path = require('path');
 const Flower = require('../models')("Flower");
 var fs = require('fs');
+const fetch = require('node-fetch');
 const { url } = require('inspector');
 
 const new_flower = async function (req, res, next) {
@@ -31,8 +32,8 @@ const update_flower = async function (req, res, next) {
         console.log("fields: ", updatedFlower);
         if (imageFile.size > 0) {
             var oldPath = imageFile.path;
-            var newPath = './public/images/' + imageFile.name
-            var rawData = fs.readFileSync(oldPath)
+            var newPath = './public/images/' + imageFile.name;
+            var rawData = fs.readFileSync(oldPath);
             fs.writeFile(newPath, rawData, function (err) {
                 if (err) console.log(err)
                 else console.log("sucsseful");
@@ -40,8 +41,14 @@ const update_flower = async function (req, res, next) {
             updatedFlower.picture = newPath.replace('./public/', '');
             console.log("45", updatedFlower)
         }
-        else if(updatedFlower.imageURL != ''){
-            console.log("url:",updatedFlower.imageURL);
+        else if (updatedFlower.imageURL != '') {
+            console.log('downloading!');
+            const response = await fetch(updatedFlower.imageURL);
+            const buffer = await response.buffer();
+            var newPath = './public/images/img' + Math.floor(Math.random() * Math.floor(15000)) + '.jpg';
+            fs.writeFile(newPath, buffer, () =>
+                console.log('finished downloading!'));
+            console.log("url:", updatedFlower.imageURL);
             updatedFlower.picture = updatedFlower.imageURL;
         }
         await Flower.UPDATE(updatedFlower);
